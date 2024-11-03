@@ -58,9 +58,15 @@ class StockTradingEnv():
             # print(f"Number of stocks to buy: {num_stocks_to_buy}")
 
             if max_stocks_possible < num_stocks_to_buy:
-                while max_stocks_possible < num_stocks_to_buy and action != 0:
-                    num_stocks_to_buy -= 1
-                    action -= 1
+                num_stocks_to_buy = max_stocks_possible
+                if num_stocks_to_buy == 1:
+                    action = 0
+                if num_stocks_to_buy == 2:
+                    action = 1
+                if num_stocks_to_buy == 3:
+                    action = 2
+                if num_stocks_to_buy == 0:
+                    action = 6
 
             # print(f"Final action decision: {action} - {self.action_map[action]}")          
         elif action in [3, 4, 5]:
@@ -69,9 +75,15 @@ class StockTradingEnv():
             # print(f"Number of stocks sellable: {max_stocks_possible}")
             # print(f"Number of stocks to sell: {num_stocks_to_sell}")
             if max_stocks_possible < num_stocks_to_sell:
-                while max_stocks_possible < num_stocks_to_sell and action != 3:
-                    num_stocks_to_sell -= 1
-                    action -= 1
+                num_stocks_to_sell = max_stocks_possible
+                if num_stocks_to_sell == 1:
+                    action = 3
+                if num_stocks_to_sell == 2:
+                    action = 4
+                if num_stocks_to_sell == 3:
+                    action = 5
+                if num_stocks_to_sell == 0:
+                    action = 6
             
             # print(f"Final action decision: {action} - {self.action_map[action]}") 
 
@@ -84,7 +96,8 @@ class StockTradingEnv():
     def step(self, action, e):
         current_day = self.df.iloc[e]
         current_price = current_day['Close/Last']
-        pct_change = current_day['Pct_Change']
+        # pct_change = current_day['Pct_Change']
+        pct_change = current_day['ema_pct_change']
 
         # new_stock_value = self.stock_value
         # new_cash_value = self.cash_value
@@ -130,22 +143,24 @@ class StockTradingEnv():
         self.portfolio_value = self.cash_value + self.stock_value
         self.portfolio_value_historical.append(self.portfolio_value)
 
-        if reward_pct >= 0.001:
+        if reward_pct >= 0.0001:
             x = 0
-        elif reward_pct < 0.001 and reward_pct > -0.001:
+            reward = 1
+        elif reward_pct < 0.0001 and reward_pct > -0.0001:
             x = 1
-        elif reward_pct <= -0.001:
+            reward = 0
+        elif reward_pct <= -0.0001:
             x = 2
+            reward = -0.2
 
         self.reward_historical.append(reward)
         self.reward_pct_historical.append(reward_pct)
 
-        pct_change = pct_change / 100
-        if pct_change >= 0.002:
+        if pct_change >= 0.1176:
             y = 0
-        elif pct_change < 0.002 and pct_change > -0.002:
+        elif pct_change < 0.1176 and pct_change > -0.0876:
             y = 1
-        elif pct_change <= -0.002:
+        elif pct_change <= -0.0876:
             y = 2
 
         self.pct_change_historical.append(pct_change)
