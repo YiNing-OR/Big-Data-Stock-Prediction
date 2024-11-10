@@ -1,7 +1,7 @@
 import numpy as np
 from DecisionTreeRegressor import DecisionTreeRegressor
 
-class RandomForestRegressor:
+class RandomForestRegressor_Base:
     def __init__(self, n_estimators=100, max_depth=None, min_samples_split=2):
         self.n_estimators = n_estimators
         self.max_depth = max_depth

@@ -2,7 +2,7 @@ import numpy as np
 from DecisionTreeRegressor import DecisionTreeRegressor
 
 class XGBoostRegressor:
-    def __init__(self, n_estimators=100, learning_rate=0.1, max_depth=3):
+    def __init__(self, n_estimators=5, learning_rate=0.1, max_depth=3):
         self.n_estimators = n_estimators
         self.learning_rate = learning_rate
         self.max_depth = max_depth
